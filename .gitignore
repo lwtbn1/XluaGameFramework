@@ -1,6 +1,5 @@
 .vs
 /Library
-/ProjectSettings
 /Temp
 /Assets/XLua/Gen
 /Assets/XLua/Gen.meta
@@ -32,4 +31,4 @@ build/luajit-2.1.0b2/src/lua51.lib
 build/luajit-2.1.0b2/src/luajit.exe
 build/luajit-2.1.0b2/src/luajit.exp
 build/luajit-2.1.0b2/src/luajit.lib
-
+.vsconfig
