@@ -16,15 +16,39 @@ function LuaMain.Start()
 	
 	
 	local pb = require "pb"
-	assert(pb.loadfile "login.pb")
-	local loginCS = {
-		username="jack",
-		password="123456"
+	local protoc = require "ProtoBuf.protoc"
+
+	-- 直接载入schema (这么写只是方便, 生产环境推荐使用 protoc.new() 接口)
+	assert(protoc:load [[
+	   message Phone {
+		  optional string name        = 1;
+		  optional int64  phonenumber = 2;
+	   }
+	   message Person {
+		  optional string name     = 1;
+		  optional int32  age      = 2;
+		  optional string address  = 3;
+		  repeated Phone  contacts = 4;
+	   } ]])
+
+	-- lua 表数据
+	local data = {
+	   name = "ilse",
+	   age  = 18,
+	   contacts = {
+		  { name = "alice", phonenumber = 12312341234 },
+		  { name = "bob",   phonenumber = 45645674567 }
+	   }
 	}
-	local bytes = assert(pb.encode("login.req_login", loginCS))
+
+	-- 将Lua表编码为二进制数据
+	local bytes = assert(pb.encode("Person", data))
 	print(pb.tohex(bytes))
-	local recvData = assert(pb.decode("login.req_login", bytes))
-	print(recvData .username)
+
+	-- 再解码回Lua表
+	local data2 = assert(pb.decode("Person", bytes))
+	print(require "ProtoBuf.serpent".block(data2))
+
 	
 end
 
