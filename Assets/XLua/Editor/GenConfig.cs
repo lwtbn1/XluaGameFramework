@@ -10,11 +10,14 @@ using System.Collections.Generic;
 using System;
 using UnityEngine;
 using XLua;
+using System.Reflection;
+using System.Linq;
+using UnityEngine.Networking;
 //using System.Reflection;
 //using System.Linq;
 
 //配置的详细介绍请看Doc下《XLua的配置.doc》
-public static class ExampleGenConfig
+public static class GenConfig
 {
     //lua中要使用到C#库的配置，比如C#标准库，或者Unity API，第三方库等。
     [LuaCallCSharp]
@@ -43,7 +46,7 @@ public static class ExampleGenConfig
                 typeof(ParticleSystem),
                 typeof(SkinnedMeshRenderer),
                 typeof(Renderer),
-                typeof(WWW),
+                typeof(UnityWebRequest),
                 typeof(Light),
                 typeof(Mathf),
                 typeof(System.Collections.Generic.List<int>),
@@ -95,5 +98,70 @@ public static class ExampleGenConfig
                 new List<string>(){"System.IO.DirectoryInfo", "CreateSubdirectory", "System.String", "System.Security.AccessControl.DirectorySecurity"},
                 new List<string>(){"System.IO.DirectoryInfo", "Create", "System.Security.AccessControl.DirectorySecurity"},
                 new List<string>(){"UnityEngine.MonoBehaviour", "runInEditMode"},
+
             };
+
+    [BlackList]
+    public static List<Type> BlackGenericTypeList = new List<Type>()
+    {
+        typeof(Span<>),
+        typeof(ReadOnlySpan<>),
+    };
+    private static bool IsBlacklistedGenericType(Type type)
+    {
+        if (!type.IsGenericType) return false;
+        return BlackGenericTypeList.Contains(type.GetGenericTypeDefinition());
+    }
+
+    [BlackList]
+    public static Func<MemberInfo, bool> GenericTypeFilter = (memberInfo) =>
+    {
+        switch (memberInfo)
+        {
+            case PropertyInfo propertyInfo:
+                return IsBlacklistedGenericType(propertyInfo.PropertyType);
+
+            case ConstructorInfo constructorInfo:
+                return constructorInfo.GetParameters().Any(p => IsBlacklistedGenericType(p.ParameterType));
+
+            case MethodInfo methodInfo:
+                return methodInfo.GetParameters().Any(p => IsBlacklistedGenericType(p.ParameterType));
+
+            default:
+                return false;
+        }
+    };
+
+
+#if UNITY_2018_1_OR_NEWER
+    [BlackList]
+    public static Func<MemberInfo, bool> MethodFilter = (memberInfo) =>
+    {
+        if (memberInfo.DeclaringType.IsGenericType && memberInfo.DeclaringType.GetGenericTypeDefinition() == typeof(Dictionary<,>))
+        {
+            if (memberInfo.MemberType == MemberTypes.Constructor)
+            {
+                ConstructorInfo constructorInfo = memberInfo as ConstructorInfo;
+                var parameterInfos = constructorInfo.GetParameters();
+                if (parameterInfos.Length > 0)
+                {
+                    if (typeof(System.Collections.IEnumerable).IsAssignableFrom(parameterInfos[0].ParameterType))
+                    {
+                        return true;
+                    }
+                }
+            }
+            else if (memberInfo.MemberType == MemberTypes.Method)
+            {
+                var methodInfo = memberInfo as MethodInfo;
+                if (methodInfo.Name == "TryAdd" || methodInfo.Name == "Remove" && methodInfo.GetParameters().Length == 2)
+                {
+                    return true;
+                }
+            }
+        }
+        return false;
+    };
+#endif
+
 }

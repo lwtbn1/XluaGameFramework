@@ -23,7 +23,8 @@ public class LuaEnvManager : MonoSingletonBase<LuaEnvManager>
             var pathSplits = luaFileName.Split('.');
 #if UNITY_EDITOR
             var luaPath = ConstDefine.LUA_SRC_ROOT_PATH;
-            for(var ix =0; ix < pathSplits.Length; ix++) {
+            for(var ix = 0; ix < pathSplits.Length; ix++) 
+            {
                 luaPath += pathSplits[ix] + ((ix == pathSplits.Length - 1)? ".lua" : "/");
             }
             Debug.Log($"lua path : {luaPath}");
