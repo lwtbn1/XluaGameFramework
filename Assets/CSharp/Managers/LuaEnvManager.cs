@@ -19,7 +19,7 @@ public class LuaEnvManager : MonoSingletonBase<LuaEnvManager>
 
         m_scriptEnv.Set("self", this);
         m_luaEnv.AddLoader((ref string luaFileName) => {
-            Debug.Log($"lua file name : {luaFileName}");
+            //Debug.Log($"lua file name : {luaFileName}");
             var pathSplits = luaFileName.Split('.');
 #if UNITY_EDITOR
             var luaPath = ConstDefine.LUA_SRC_ROOT_PATH;
@@ -27,7 +27,7 @@ public class LuaEnvManager : MonoSingletonBase<LuaEnvManager>
             {
                 luaPath += pathSplits[ix] + ((ix == pathSplits.Length - 1)? ".lua" : "/");
             }
-            Debug.Log($"lua path : {luaPath}");
+            //Debug.Log($"lua path : {luaPath}");
             return FileTools.LoadLuaFileUTF8Bytes(luaPath);
 #else
             return null;
@@ -39,6 +39,9 @@ public class LuaEnvManager : MonoSingletonBase<LuaEnvManager>
     void Start()
     {
         m_luaEnv.DoString("require('LuaMain')");
+        var luaMainT = m_luaEnv.Global.Get<LuaTable>("LuaMain");
+        var startFunc = luaMainT.Get<LuaFunction>("Start");
+        startFunc.Call();
     }
 
     // Update is called once per frame
