@@ -13,6 +13,8 @@ using XLua;
 using System.Reflection;
 using System.Linq;
 using UnityEngine.Networking;
+using UnityEngine.UI;
+using static UnityEngine.UI.Button;
 //using System.Reflection;
 //using System.Linq;
 
@@ -51,7 +53,10 @@ public static class GenConfig
                 typeof(Mathf),
                 typeof(System.Collections.Generic.List<int>),
                 typeof(Action<string>),
-                typeof(UnityEngine.Debug)
+                typeof(UnityEngine.Debug),
+                typeof(Button),
+                typeof(ButtonClickedEvent)
+                
             };
 
     //C#静态调用Lua的配置（包括事件的原型），仅可以配delegate，interface

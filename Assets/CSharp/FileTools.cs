@@ -3,29 +3,44 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
+using UnityEngine.Networking;
+using XLua;
 
+[LuaCallCSharp]
 public static class FileTools
 {
     public static byte[] LoadLuaFileUTF8Bytes(string path)
     {
         
-        if (!File.Exists(path))
-        {
-            Debug.LogError($"加载lua文件出错，lua文件不存在：{path}");
-            return null;
-        }
         byte[] bytes = null;
         try
         {
-            using (var fs = new StreamReader(path))
-            {
-                var txt = fs.ReadToEnd();
-                bytes = System.Text.Encoding.UTF8.GetBytes(txt);
-            }
-        }catch(Exception e)
+#if UNITY_EDITOR
+            bytes = File.ReadAllBytes(path);
+
+#else
+#if UNITY_ANDROID
+            WWW www = new WWW(path);
+            while (!www.isDone) { }
+            bytes = www.bytes;
+#endif
+#endif
+
+        }
+        catch (Exception e)
         {
             Debug.LogError(e.Message);
         }
         return bytes;
+    }
+
+    public static void Test(int i)
+    {
+
+    }
+
+    public static void Test1(GameObject gameObject)
+    {
+
     }
 }

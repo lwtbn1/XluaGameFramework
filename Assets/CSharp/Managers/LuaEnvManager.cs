@@ -21,17 +21,14 @@ public class LuaEnvManager : MonoSingletonBase<LuaEnvManager>
         m_luaEnv.AddLoader((ref string luaFileName) => {
             //Debug.Log($"lua file name : {luaFileName}");
             var pathSplits = luaFileName.Split('.');
-#if UNITY_EDITOR
+
             var luaPath = ConstDefine.LUA_SRC_ROOT_PATH;
             for(var ix = 0; ix < pathSplits.Length; ix++) 
             {
                 luaPath += pathSplits[ix] + ((ix == pathSplits.Length - 1)? ".lua" : "/");
             }
-            //Debug.Log($"lua path : {luaPath}");
+            Debug.Log($"lua path : {luaPath}");
             return FileTools.LoadLuaFileUTF8Bytes(luaPath);
-#else
-            return null;
-#endif
 
         });
     }
