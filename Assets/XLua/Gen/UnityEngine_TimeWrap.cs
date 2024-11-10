@@ -31,13 +31,12 @@ namespace XLua.CSObjectWrap
 			Utils.EndObjectRegister(type, L, translator, null, null,
 			    null, null, null);
 
-		    Utils.BeginClassRegister(type, L, __CreateInstance, 1, 27, 7);
+		    Utils.BeginClassRegister(type, L, __CreateInstance, 1, 25, 6);
 			
 			
             
 			Utils.RegisterFunc(L, Utils.CLS_GETTER_IDX, "time", _g_get_time);
             Utils.RegisterFunc(L, Utils.CLS_GETTER_IDX, "timeAsDouble", _g_get_timeAsDouble);
-            Utils.RegisterFunc(L, Utils.CLS_GETTER_IDX, "timeAsRational", _g_get_timeAsRational);
             Utils.RegisterFunc(L, Utils.CLS_GETTER_IDX, "timeSinceLevelLoad", _g_get_timeSinceLevelLoad);
             Utils.RegisterFunc(L, Utils.CLS_GETTER_IDX, "timeSinceLevelLoadAsDouble", _g_get_timeSinceLevelLoadAsDouble);
             Utils.RegisterFunc(L, Utils.CLS_GETTER_IDX, "deltaTime", _g_get_deltaTime);
@@ -59,7 +58,6 @@ namespace XLua.CSObjectWrap
             Utils.RegisterFunc(L, Utils.CLS_GETTER_IDX, "realtimeSinceStartup", _g_get_realtimeSinceStartup);
             Utils.RegisterFunc(L, Utils.CLS_GETTER_IDX, "realtimeSinceStartupAsDouble", _g_get_realtimeSinceStartupAsDouble);
             Utils.RegisterFunc(L, Utils.CLS_GETTER_IDX, "captureDeltaTime", _g_get_captureDeltaTime);
-            Utils.RegisterFunc(L, Utils.CLS_GETTER_IDX, "captureDeltaTimeRational", _g_get_captureDeltaTimeRational);
             Utils.RegisterFunc(L, Utils.CLS_GETTER_IDX, "captureFramerate", _g_get_captureFramerate);
             Utils.RegisterFunc(L, Utils.CLS_GETTER_IDX, "inFixedTimeStep", _g_get_inFixedTimeStep);
             
@@ -68,7 +66,6 @@ namespace XLua.CSObjectWrap
             Utils.RegisterFunc(L, Utils.CLS_SETTER_IDX, "maximumParticleDeltaTime", _s_set_maximumParticleDeltaTime);
             Utils.RegisterFunc(L, Utils.CLS_SETTER_IDX, "timeScale", _s_set_timeScale);
             Utils.RegisterFunc(L, Utils.CLS_SETTER_IDX, "captureDeltaTime", _s_set_captureDeltaTime);
-            Utils.RegisterFunc(L, Utils.CLS_SETTER_IDX, "captureDeltaTimeRational", _s_set_captureDeltaTimeRational);
             Utils.RegisterFunc(L, Utils.CLS_SETTER_IDX, "captureFramerate", _s_set_captureFramerate);
             
 			
@@ -126,18 +123,6 @@ namespace XLua.CSObjectWrap
 		    try {
             
 			    LuaAPI.lua_pushnumber(L, UnityEngine.Time.timeAsDouble);
-            } catch(System.Exception gen_e) {
-                return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
-            }
-            return 1;
-        }
-        
-        [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-        static int _g_get_timeAsRational(RealStatePtr L)
-        {
-		    try {
-                ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
-			    translator.Push(L, UnityEngine.Time.timeAsRational);
             } catch(System.Exception gen_e) {
                 return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
             }
@@ -397,18 +382,6 @@ namespace XLua.CSObjectWrap
         }
         
         [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-        static int _g_get_captureDeltaTimeRational(RealStatePtr L)
-        {
-		    try {
-                ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
-			    translator.Push(L, UnityEngine.Time.captureDeltaTimeRational);
-            } catch(System.Exception gen_e) {
-                return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
-            }
-            return 1;
-        }
-        
-        [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
         static int _g_get_captureFramerate(RealStatePtr L)
         {
 		    try {
@@ -492,20 +465,6 @@ namespace XLua.CSObjectWrap
 		    try {
                 
 			    UnityEngine.Time.captureDeltaTime = (float)LuaAPI.lua_tonumber(L, 1);
-            
-            } catch(System.Exception gen_e) {
-                return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
-            }
-            return 0;
-        }
-        
-        [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-        static int _s_set_captureDeltaTimeRational(RealStatePtr L)
-        {
-		    try {
-                ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
-			Unity.IntegerTime.RationalTime gen_value;translator.Get(L, 1, out gen_value);
-				UnityEngine.Time.captureDeltaTimeRational = gen_value;
             
             } catch(System.Exception gen_e) {
                 return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
