@@ -2,7 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SingletonBase<T> where T : new()
+public class MonoSingletonBase<T> :MonoBehaviour
+    where T : MonoBehaviour
 {
     private static T ins;
     public static T Ins
@@ -11,7 +12,7 @@ public class SingletonBase<T> where T : new()
         {
             if (null == ins)
             {
-                ins = new T();
+                ins = new GameObject(typeof(T).ToString()).AddComponent<T>();
             }
             return ins;
         }

@@ -1,0 +1,17 @@
+[
+    {
+        "Path": "common",
+        "Strategy": 0,
+        "IsCommon": true
+    },
+    {
+        "Path": "Fight",
+        "Strategy": 0,
+        "IsCommon": false
+    },
+    {
+        "Path": "UISystem",
+        "Strategy": 0,
+        "IsCommon": false
+    }
+]
