@@ -25,6 +25,7 @@ public static class ABBuilder
         foreach (var abConfig in litAbConfig)
         {
             var path = abConfig.Path;
+            var strategy = abConfig.Strategy;
         }
 
         return litAssetBundle;

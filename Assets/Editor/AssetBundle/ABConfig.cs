@@ -46,29 +46,4 @@ public class ABConfigCollector
         Datas = LitJson.JsonMapper.ToObject<List<ABConfig>>(jsonStr);
     }
 
-   
-    public static void Write()
-    {
-        Datas = new List<ABConfig>();
-        Datas.Add(new ABConfig()
-        {
-            Path = "common",
-            Strategy = EABBuildStrategy.EveryFolderPerAB,
-            IsCommon = true
-        });
-        Datas.Add(new ABConfig()
-        {
-            Path = "Fight",
-            Strategy = EABBuildStrategy.EveryFolderPerAB,
-            IsCommon = false
-        });
-        Datas.Add(new ABConfig()
-        {
-            Path = "UISystem",
-            Strategy = EABBuildStrategy.EveryFolderPerAB,
-            IsCommon = false
-        });
-        var jsonStr = LitJson.JsonMapper.ToJson(Datas);
-        Debug.Log(jsonStr);
-    }
 }
