@@ -35,11 +35,26 @@ public static class FileTools
         return bytes;
     }
 
-    public static string GetAssetPath(string fullPath)
+    public static string GetAssetPathL(string fullPath)
     {
-        var legalFullPath = fullPath.Replace('\\', '/');
-        var startIx = legalFullPath.IndexOf(Application.dataPath, StringComparison.Ordinal | StringComparison.OrdinalIgnoreCase);
-        return legalFullPath.Substring(startIx);
+        var legalFullPath = fullPath.Replace('\\', '/').ToLower();
+        var startIx = Application.dataPath.Length + 1;
+        return legalFullPath.Substring(startIx - 7);
+    }
+
+    public static string DirToABNameL(string fullPath)
+    {
+        var legalFullPath = fullPath.Replace('\\', '/').ToLower();
+        var startix = AssetDefine.AssetRoot.Length;
+        return legalFullPath.Substring(startix).Replace('/', '#') + ".ab";
+    }
+
+    public static string FullFileNameToABNameL(string fullFileName)
+    {
+        var noExtensionFileName = fullFileName.Replace(Path.GetExtension(fullFileName),"");
+        var legalFullPath = noExtensionFileName.Replace('\\', '/').ToLower();
+        var startix = AssetDefine.AssetRoot.Length;
+        return legalFullPath.Substring(startix).Replace('/', '#') + ".ab";
     }
     public static void Test(int i)
     {

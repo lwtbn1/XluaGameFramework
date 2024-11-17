@@ -9,7 +9,7 @@ public static class LegalAssets
     
     public static List<string> prefix = new List<string>()
     {
-        ".png",".prefab"
+        ".png",".prefab",".asset",".anim",".controller",".ogg",".mp3"
     };
 
     public static bool IsLegal(FileInfo fileInfo)
@@ -20,5 +20,15 @@ public static class LegalAssets
 
 public static class AssetDefine
 {
-    public const string ASSET_PREFIX = "Datas";
+    private static string assetRoot = null;
+
+    public static string AssetRoot
+    {
+        get
+        {
+            if(assetRoot == null)
+                assetRoot = (Application.dataPath + "/Datas/").ToLower();
+            return assetRoot;
+        }
+    }
 }

@@ -1,17 +1,38 @@
 [
     {
-        "Path": "common",
+        "Path": "Common/Audio",
         "Strategy": 0,
         "IsCommon": true
     },
     {
-        "Path": "Fight",
-        "Strategy": 0,
-        "IsCommon": false
+        "Path": "Common/Font",
+        "Strategy": 3,
+        "IsCommon": true
     },
     {
-        "Path": "UISystem",
+        "Path": "Common/Material",
+        "Strategy": 3,
+        "IsCommon": true
+    },
+    {
+        "Path": "Common/Model",
         "Strategy": 0,
-        "IsCommon": false
+        "IsCommon": true
+    },
+    {
+        "Path": "Common/Prefab",
+        "Strategy": 0,
+        "IsCommon": true
+    },
+    {
+        "Path": "Common/Sprite",
+        "Strategy": 2,
+        "IsCommon": true
+    }
+,
+    {
+        "Path": "Common/Texture",
+        "Strategy": 1,
+        "IsCommon": true
     }
 ]

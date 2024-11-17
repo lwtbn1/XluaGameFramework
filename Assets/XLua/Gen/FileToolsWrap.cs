@@ -31,8 +31,10 @@ namespace XLua.CSObjectWrap
 			Utils.EndObjectRegister(type, L, translator, null, null,
 			    null, null, null);
 
-		    Utils.BeginClassRegister(type, L, __CreateInstance, 4, 0, 0);
+		    Utils.BeginClassRegister(type, L, __CreateInstance, 6, 0, 0);
 			Utils.RegisterFunc(L, Utils.CLS_IDX, "LoadLuaFileUTF8Bytes", _m_LoadLuaFileUTF8Bytes_xlua_st_);
+            Utils.RegisterFunc(L, Utils.CLS_IDX, "GetAssetPathL", _m_GetAssetPathL_xlua_st_);
+            Utils.RegisterFunc(L, Utils.CLS_IDX, "PathToABNameL", _m_PathToABNameL_xlua_st_);
             Utils.RegisterFunc(L, Utils.CLS_IDX, "Test", _m_Test_xlua_st_);
             Utils.RegisterFunc(L, Utils.CLS_IDX, "Test1", _m_Test1_xlua_st_);
             
@@ -69,6 +71,56 @@ namespace XLua.CSObjectWrap
                     string _path = LuaAPI.lua_tostring(L, 1);
                     
                         var gen_ret = FileTools.LoadLuaFileUTF8Bytes( _path );
+                        LuaAPI.lua_pushstring(L, gen_ret);
+                    
+                    
+                    
+                    return 1;
+                }
+                
+            } catch(System.Exception gen_e) {
+                return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
+            }
+            
+        }
+        
+        [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+        static int _m_GetAssetPathL_xlua_st_(RealStatePtr L)
+        {
+		    try {
+            
+            
+            
+                
+                {
+                    string _fullPath = LuaAPI.lua_tostring(L, 1);
+                    
+                        var gen_ret = FileTools.GetAssetPathL( _fullPath );
+                        LuaAPI.lua_pushstring(L, gen_ret);
+                    
+                    
+                    
+                    return 1;
+                }
+                
+            } catch(System.Exception gen_e) {
+                return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
+            }
+            
+        }
+        
+        [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+        static int _m_PathToABNameL_xlua_st_(RealStatePtr L)
+        {
+		    try {
+            
+            
+            
+                
+                {
+                    string _fullPath = LuaAPI.lua_tostring(L, 1);
+                    
+                        var gen_ret = FileTools.DirToABNameL( _fullPath );
                         LuaAPI.lua_pushstring(L, gen_ret);
                     
                     

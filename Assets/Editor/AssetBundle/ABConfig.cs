@@ -8,7 +8,7 @@ public enum EABBuildStrategy
     /// <summary>
     /// 当前目录下每个目录打一个AB
     /// </summary>
-    EveryFolderPerAB,
+    EveryFolderPerAB = 0,
     /// <summary>
     /// 当前目录下每个文件打一个AB
     /// </summary>
@@ -17,6 +17,9 @@ public enum EABBuildStrategy
     /// 当前目录下递归寻找，每个目录打一个AB
     /// </summary>
     RecursionFolderPerAB,
+    
+    //目录下所有文件打一个AB
+    AllFileOneAB,
 }
 
 public class ABConfig

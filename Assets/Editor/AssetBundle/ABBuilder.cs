@@ -14,10 +14,14 @@ public static class ABBuilder
         
         var litAssetBundle = CollectionAssets();
         //AssetBundleBuild
-        var outputPath = Application.persistentDataPath + "/Pack";
+        var outputPath = Application.streamingAssetsPath + "/Pack";
+        if(Directory.Exists(outputPath))
+            Directory.Delete(outputPath, true);
+        Directory.CreateDirectory(outputPath);
         BuildPipeline.BuildAssetBundles(outputPath, litAssetBundle.ToArray(),
             BuildAssetBundleOptions.ChunkBasedCompression | BuildAssetBundleOptions.ForceRebuildAssetBundle,
             EditorUserBuildSettings.activeBuildTarget);
+        AssetDatabase.Refresh();
     }
 
     static List<AssetBundleBuild>  CollectionAssets()
@@ -26,7 +30,7 @@ public static class ABBuilder
         var litAbConfig = ABConfigCollector.Datas;
         foreach (var abConfig in litAbConfig)
         {
-            var path = abConfig.Path;
+            var path = AssetDefine.AssetRoot + abConfig.Path;
             var strategy = abConfig.Strategy;
             switch (strategy)
             {
@@ -45,6 +49,11 @@ public static class ABBuilder
                     CollectionAssetsRecursionFolderPerAB(litAssetBundle,path);
                     break;
                 }
+                case EABBuildStrategy.AllFileOneAB:
+                {
+                    CollectionAssetsRAllFileOneAB(litAssetBundle,path);
+                    break;
+                }
             }
         }
 
@@ -54,21 +63,19 @@ public static class ABBuilder
     static void CollectionAssetsEveryFilePerAB(List<AssetBundleBuild> lit,string rootPath)
     {
         var filePaths = Directory.GetFiles(rootPath, "*", SearchOption.AllDirectories);
-        var assetBundleName = rootPath.ToLower();
-        var assetNames = new List<string>();
-        var assetBundleBuild = new AssetBundleBuild();
-        assetBundleBuild.assetBundleName = assetBundleName;
         foreach (var filePath in filePaths)
         {
             var fileInfo = new FileInfo(filePath);
             if (LegalAssets.IsLegal(fileInfo))
             {
-                assetNames.Add(FileTools.GetAssetPath(filePath).ToLower());
+                var assetNames = new List<string>();
+                assetNames.Add(FileTools.GetAssetPathL(filePath));
+                var assetBundleBuild = new AssetBundleBuild();
+                assetBundleBuild.assetBundleName = FileTools.FullFileNameToABNameL(filePath);
+                assetBundleBuild.assetNames = assetNames.ToArray();
+                lit.Add(assetBundleBuild);
             }
         }
-
-        assetBundleBuild.assetNames = assetNames.ToArray();
-        lit.Add(assetBundleBuild);
     }
     static void CollectionAssetsEveryFolderPerAB(List<AssetBundleBuild> lit,string rootPath)
     {
@@ -77,41 +84,68 @@ public static class ABBuilder
         {
             var dirInfo = new DirectoryInfo(dirPath);
             var assetNames = new List<string>();
-            var assetBundleBuild = new AssetBundleBuild();
-            assetBundleBuild.assetBundleName = FileTools.GetAssetPath(dirInfo.FullName).ToLower();
+            
             var fileInfos = dirInfo.GetFiles();
             foreach (var fileInfo in fileInfos)
             {
                 if (LegalAssets.IsLegal(fileInfo))
                 {
-                    assetNames.Add(FileTools.GetAssetPath(fileInfo.FullName).ToLower());
+                    assetNames.Add(FileTools.GetAssetPathL(fileInfo.FullName));
                 }
             }
-            assetBundleBuild.assetNames = assetNames.ToArray();
-            
-            lit.Add(assetBundleBuild);
+            if (assetNames.Count > 0)
+            {
+                var assetBundleBuild = new AssetBundleBuild();
+                assetBundleBuild.assetBundleName = FileTools.DirToABNameL(dirInfo.FullName);
+                assetBundleBuild.assetNames = assetNames.ToArray();
+                lit.Add(assetBundleBuild);
+            }
         }
     }
     static void CollectionAssetsRecursionFolderPerAB(List<AssetBundleBuild> lit, string rootPath)
     {
         var dirPaths = Directory.GetDirectories(rootPath, "*", SearchOption.AllDirectories);
-        
         foreach (var dirPath in dirPaths)
         {
             var dirInfo = new DirectoryInfo(dirPath);
             var assetNames = new List<string>();
-            var assetBundleBuild = new AssetBundleBuild();
-            assetBundleBuild.assetBundleName = FileTools.GetAssetPath(dirInfo.FullName).ToLower();
             var fileInfos = dirInfo.GetFiles();
             foreach (var fileInfo in fileInfos)
             {
                 if (LegalAssets.IsLegal(fileInfo))
                 {
-                    assetNames.Add(FileTools.GetAssetPath(fileInfo.FullName).ToLower());
+                    assetNames.Add(FileTools.GetAssetPathL(fileInfo.FullName));
                 }
             }
+            if (assetNames.Count > 0)
+            {
+                var assetBundleBuild = new AssetBundleBuild();
+                assetBundleBuild.assetBundleName = FileTools.DirToABNameL(dirInfo.FullName);
+                assetBundleBuild.assetNames = assetNames.ToArray();
+                lit.Add(assetBundleBuild);
+            }
+        }
+    }
+
+    static void CollectionAssetsRAllFileOneAB(List<AssetBundleBuild> lit, string rootPath)
+    {
+        var filePaths = Directory.GetFiles(rootPath, "*", SearchOption.AllDirectories);
+        var assetNames = new List<string>();
+       
+        foreach (var filePath in filePaths)
+        {
+            var fileInfo = new FileInfo(filePath);
+            if (LegalAssets.IsLegal(fileInfo))
+            {
+                assetNames.Add(FileTools.GetAssetPathL(filePath));
+            }
+        }
+
+        if (assetNames.Count > 0)
+        {
+            var assetBundleBuild = new AssetBundleBuild();
+            assetBundleBuild.assetBundleName = FileTools.DirToABNameL(rootPath);
             assetBundleBuild.assetNames = assetNames.ToArray();
-            
             lit.Add(assetBundleBuild);
         }
     }
