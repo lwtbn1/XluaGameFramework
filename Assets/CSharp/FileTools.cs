@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System.Net.Mime;
 using UnityEngine;
 using UnityEngine.Networking;
 using XLua;
@@ -34,6 +35,12 @@ public static class FileTools
         return bytes;
     }
 
+    public static string GetAssetPath(string fullPath)
+    {
+        var legalFullPath = fullPath.Replace('\\', '/');
+        var startIx = legalFullPath.IndexOf(Application.dataPath, StringComparison.Ordinal | StringComparison.OrdinalIgnoreCase);
+        return legalFullPath.Substring(startIx);
+    }
     public static void Test(int i)
     {
 
